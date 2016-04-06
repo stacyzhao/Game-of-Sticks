@@ -78,7 +78,6 @@ def play_again():
 
 def update_dict(game_dict, ai_dict):
     for k in ai_dict:
-        print("k", k)
         game_dict[k].append(ai_dict[k])
 
 
@@ -108,12 +107,10 @@ def main():
             # user loses
             if determine_turn(number_of_turns) == True:
                 update_dict(game_dict, ai_dict)
-                print ("user end game dict: ", game_dict)
                 print ("User Loses")
             # ai loses
             else:
                 ai_dict.clear()
-                print ("ai end game dict: ", game_dict)
                 print ("AI Loses")
             play_again()
 
