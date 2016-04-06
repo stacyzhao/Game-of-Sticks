@@ -17,7 +17,7 @@ def starting_number_sticks():
 
 def user_picks_sticks():
     while True:
-        player1 = input("How many sticks do you want to pick up from the table (1-3)? ")
+        player1 = input("How many sticks do you want to pick up from the table (1-3)? \n")
         if player1 == "":
             print("Looks like you didn't give me a number. Try again.")
             continue
@@ -45,7 +45,7 @@ def determine_turn(number_of_turns):
 def play_again():
     "Asks user if they want to play the game again."
 
-    play_again = input("Do you want to play Mystery Word again? [y/N] \n")
+    play_again = input("Do you want to play Game of Sticks again? [y/N] \n")
 
     if play_again.lower().strip() == "y":
         main()
@@ -53,6 +53,13 @@ def play_again():
     else:
         sys.exit()
 
+def determine_turn(number_of_turns):
+    if number_of_turns % 2 == 1:
+        #user turn
+        return True
+    elif number_of_turns % 2 == 0:
+        #AI/Player2 turn
+        return False
 
 def main():
     total_number_sticks = 0
@@ -67,13 +74,19 @@ def main():
             if determine_turn(number_of_turns):
                 total_number_sticks -= user_picks_sticks()
             else:
-                ai_sticks = ai_picks_sticks(total_number_sticks, game_dict, ai_dict)
-                total_number_sticks -= ai_sticks
-                print("AI picked {} stick(s).".format(ai_sticks))
-            number_of_turns +=1
+                total_number_sticks -= user_picks_sticks()
+                print("Player2 picked {} stick(s).".format(total_number_sticks))
+
+            number_of_turns += 1
 
         else:
-            print("Last player to take a turn loses!")
+            # user loses
+            if determine_turn(number_of_turns) == True:
+                print ("Player1 Loses")
+            # AI/Player2 loses
+            else:
+                print ("Player2 Loses")
+
             play_again()
 
 if __name__ == '__main__':
