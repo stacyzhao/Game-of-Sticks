@@ -1,4 +1,3 @@
-
 import random
 import sys
 
@@ -42,29 +41,10 @@ def determine_turn(number_of_turns):
         #AI turn
         return False
 
-def ai_picks_sticks(total_number_sticks, game_dict, ai_dict):
-    # if total_number_sticks > 3:
-    for key in reversed(range(0, total_number_sticks)):
-        print ("key: ", key)
-        print(game_dict[key])
-
-        if key == game_dict[total_number_sticks]:
-            ai_sticks = random.choice(game_dict[total_number_sticks])
-
-            print ("ai_sticks: ", ai_sticks)
-            # ai_store_choices(total_number_sticks, ai_dict, ai_sticks)
-
-            ai_dict[total_number_sticks] = [ai_sticks]
-            print ("ai_dict: ", ai_dict[total_number_sticks])
-            if total_number_sticks < 3:
-                ai_wins(total_number_sticks)
-            return ai_sticks
-
-def ai_store_choices(sticks, ai_dict, ai_sticks):
-    if sticks not in game_dict:
-        game_dict[sticks] = [ai_sticks]
-    return
-
+def ai_picks_sticks(current_number_sticks, game_dict, ai_dict):
+    ai_sticks = random.choice(game_dict[current_number_sticks])
+    ai_dict[current_number_sticks] = ai_sticks
+    return ai_sticks
 
 def ai_wins(total_number_sticks):
     if total_number_sticks == 3:
@@ -77,7 +57,7 @@ def ai_wins(total_number_sticks):
 def play_again():
     "Asks user if they want to play the game again."
 
-    play_again = input("Do you want to play Mystery Word again? [y/N] \n")
+    play_again = input("Do you want to play Game of Sticks again? [y/N] \n")
 
     if play_again.lower().strip() == "y":
         main()
@@ -85,45 +65,55 @@ def play_again():
     else:
         sys.exit()
 
+# def game_option():
+#     option = int(input("""Option: \n
+#         Play against a friend (1) \n
+#         Play against the computer (2) \n
+#         Which option do you take (1-2)?"""))
+#
+#     if option == 1:
+#         play against a friend
+    # else:
+        #play against a computer
+
+def update_dict(game_dict, ai_dict):
+    for k in ai_dict:
+        print("k", k)
+        game_dict[k].append(ai_dict[k])
+
 
 def main():
     total_number_sticks = 0
     number_of_turns = 1
 
     game_dict = {}
+    ai_dict = {}
 
-    ai_dict = {
-    # 4: [],
-    # 5: [],
-    # 6: [],
-    # 7: [],
-    # 8: [],
-    # 9: [],
-    }
     print ("Welcome to the Game of Sticks! \n")
 
     while True:
         total_number_sticks = starting_number_sticks()
-        game_dict = {n: n+1 for n in range(1,total_number_sticks)}
-        print (game_dict)
+        game_dict = {n: [1,2,3] for n in range(1,total_number_sticks)}
         while total_number_sticks > 0:
             print("There are {} sticks on the board. \n".format(total_number_sticks))
             if determine_turn(number_of_turns):
                 total_number_sticks -= user_picks_sticks()
             else:
                 ai_sticks = ai_picks_sticks(total_number_sticks, game_dict, ai_dict)
-                # total_number_sticks -= ai_sticks
+                total_number_sticks -= ai_sticks
                 print("AI picked {} stick(s). \n".format(ai_sticks))
             number_of_turns +=1
 
         else:
             # user loses
             if determine_turn(number_of_turns) == True:
-                game_dict.update(ai_dict)
+                update_dict(game_dict, ai_dict)
+                print ("user end game dict: ", game_dict)
                 print ("User Loses")
             # ai loses
             else:
                 ai_dict.clear()
+                print ("ai end game dict: ", game_dict)
                 print ("AI Loses")
             play_again()
 
